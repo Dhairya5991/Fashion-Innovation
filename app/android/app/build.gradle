@@ -1,0 +1,123 @@
+apply plugin: "com.android.application"
+apply plugin: "com.facebook.react.devsupport"
+apply plugin: "org.jetbrains.kotlin.android" // Apply Kotlin plugin
+apply plugin: "com.google.gms.google-services" // Apply google-services plugin
+
+project.ext.react = [
+    enableHermes: false, // Set to true to enable Hermes
+    // For more advanced use in large apps, please refer to the documentation:
+    // https://reactnative.dev/docs/next/guides/android-app-assets
+]
+
+def enableSeparateBuildPerCpuArchitecture = false
+def enableProguardInReleaseBuilds = false
+def jscFlavor = 'org.webkit:android-jsc:+'
+def enableFlipper = false
+
+def get   ReactNativeVersion() {
+    def reactNativePackage = new File(projectDir, '../../node_modules/react-native/package.json')
+    def reactNativeJson = new JsonSlurper().parseText(reactNativePackage.text)
+    return reactNativeJson.version
+}
+
+android {
+    ndkVersion rootProject.ext.ndkVersion
+
+    compileSdk rootProject.ext.compileSdkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    namespace "com.arvirtualtryonapp"
+    defaultConfig {
+        applicationId "com.arvirtualtryonapp"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        missingDimensionStrategy "react-native-camera", "general" // Required for react-native-camera
+    }
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // Caution! In production, you should use a secure way to store your signing keys.
+            // A production signing config should be defined in gradle.properties and not hardcoded here.
+            signingConfig signingConfigs.debug // Using debug for simplicity, replace for production
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+    // Flag to enable the new architecture (Fabric)
+    // You can enable this by passing -PnewArchEnabled=true when running your app
+    // or by setting `newArchEnabled` to `true` in your `gradle.properties`
+    buildFeatures {
+        prefab true
+    }
+}
+
+repositories {
+    mavenCentral()
+    google()
+    maven { url 'https://www.jitpack.io' }
+}
+
+dependencies {
+    // Basic React Native dependencies
+    implementation project(':react-native-screens')
+    implementation project(':react-native-safe-area-context')
+    implementation project(':react-native-gesture-handler')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-webview')
+    implementation project(':react-native-camera')
+    implementation project(':react-native-permissions')
+    implementation project(':react-native-masked-view')
+    implementation project(':react-native-netinfo')
+    implementation project(':react-native-google-signin') // For Google Sign-In
+
+    // React Native Firebase
+    implementation platform("com.google.firebase:firebase-bom:${rootProject.ext.firebaseBomVersion}")
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-storage'
+
+    // Expo GL for WebGL rendering
+    implementation 'expo.modules.core:expo-core:1.2.0'
+    implementation 'expo.modules.updates:expo-updates:0.18.19'
+    implementation 'expo.modules.gl:expo-gl:12.0.0' // Adjust version as needed, check Expo GL docs
+
+    // ARCore dependencies
+    implementation 'com.google.ar:core:1.41.0' // Latest ARCore SDK version
+
+    // If you're using Flipper for debugging
+    if (enableFlipper) {
+        def flipperSdkVersion = "0.264.0"
+        implementation "com.facebook.flipper:flipper-noop:${flipperSdkVersion}"
+        // ... (other Flipper dependencies if needed)
+    }
+
+    // Add this line to specify your JSC flavor (if not using Hermes)
+    if (!project.ext.react.enableHermes) {
+        implementation jscFlavor
+    } else {
+        implementation("com.facebook.react:hermes-engine") {
+            exclude group: "com.facebook.fbjni"
+        }
+    }
+}

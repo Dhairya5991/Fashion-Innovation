@@ -1,0 +1,9 @@
+Flask==2.3.4
+numpy==1.26.4
+Pillow==10.3.0
+opencv-python==4.9.0.80
+# For AI/ML model, choose one:
+tensorflow==2.16.1
+# or
+# torch==2.2.2
+# torchvision==0.17.2
