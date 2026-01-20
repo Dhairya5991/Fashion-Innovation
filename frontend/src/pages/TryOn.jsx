@@ -51,16 +51,23 @@ export default function TryOn(){
           <div>
             <h2 className="text-xl font-bold mb-4">Select Product to Try On</h2>
             <div className="space-y-2 max-h-64 overflow-y-auto">
-              {products.map(p => (
-                <button
-                  key={p._id}
-                  onClick={() => setSelectedProduct(p)}
-                  className={`w-full text-left p-3 rounded-lg border ${selectedProduct?._id === p._id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}
-                >
-                  <div className="font-medium">{p.title}</div>
-                  <div className="text-sm text-gray-600">₹{p.priceINR}</div>
-                </button>
-              ))}
+              {Array.isArray(products) && products.length > 0 ? (
+                products.map(p => (
+                  <button
+                    key={p._id}
+                    onClick={() => setSelectedProduct(p)}
+                    className={`w-full text-left p-3 rounded-lg border ${selectedProduct?._id === p._id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}
+                  >
+                    <div className="font-medium">{p.title}</div>
+                    <div className="text-sm text-gray-600">₹{p.priceINR}</div>
+                  </button>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                  Loading products...
+                </div>
+              )}
             </div>
           </div>
           

@@ -9,6 +9,8 @@ export default function ARMirror({ modelUrl }){
   const videoRef = useRef(null)
 
   useEffect(()=>{
+    if (!containerRef.current) return
+
     let renderer, scene, camera3D, model, loader, animationId
     let video = videoRef.current
     const width = 640
@@ -119,8 +121,12 @@ export default function ARMirror({ modelUrl }){
         const tracks = video.srcObject.getTracks()
         tracks.forEach(t => t.stop())
       }
-      renderer.dispose()
-      containerRef.current.removeChild(renderer.domElement)
+      if (renderer) {
+        renderer.dispose()
+      }
+      if (containerRef.current && renderer && renderer.domElement && containerRef.current.contains(renderer.domElement)) {
+        containerRef.current.removeChild(renderer.domElement)
+      }
     }
   }, [modelUrl])
 
