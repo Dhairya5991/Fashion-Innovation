@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
+import { useCart } from '../contexts/CartContext'
 
 export default function ProductPage() {
   const { id } = useParams()
   const [p, setP] = useState(null)
   const [selectedSize, setSelectedSize] = useState('')
+  const { addToCart } = useCart()
   useEffect(() => {
     axios.get(import.meta.env.VITE_API_URL + '/products/' + id).then(r => {
       setP(r.data)
@@ -17,18 +19,13 @@ export default function ProductPage() {
 
   if (!p) return <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
 
-  const addToCart = () => {
+  const handleAddToCart = () => {
     if (!selectedSize && p.sizes && p.sizes.length > 0) {
       alert('Please select a size')
       return
     }
-    // simple localStorage cart
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    cart.push({ productId: p._id, title: p.title, price: p.priceINR, qty: 1, size: selectedSize })
-    localStorage.setItem('cart', JSON.stringify(cart))
-    // Dispatch custom event to update cart count
-    window.dispatchEvent(new Event('cartUpdated'))
-    alert('Added to cart')
+    addToCart({ ...p, selectedSize })
+    alert('Added to cart!')
   }
 
   return (
@@ -63,7 +60,7 @@ export default function ProductPage() {
 
           <div className="flex space-x-4">
             <button 
-              onClick={addToCart} 
+              onClick={handleAddToCart} 
               className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
               Add to Cart

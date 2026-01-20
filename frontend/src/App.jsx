@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import Home from './pages/Home'
 import ProductPage from './pages/Product'
@@ -6,53 +6,47 @@ import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import TryOn from './pages/TryOn'
 import Admin from './pages/Admin'
-import Logo from './components/Logo'
-import Footer from './components/Footer'
+import Contact from './pages/Contact'
+import { useCart } from './contexts/CartContext'
 
 export default function App() {
-  const [cartCount, setCartCount] = useState(0)
-
-  useEffect(() => {
-    const updateCartCount = () => {
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-      const count = cart.reduce((sum, item) => sum + item.qty, 0)
-      setCartCount(count)
-    }
-    
-    updateCartCount()
-    window.addEventListener('storage', updateCartCount)
-    window.addEventListener('cartUpdated', updateCartCount)
-    return () => {
-      window.removeEventListener('storage', updateCartCount)
-      window.removeEventListener('cartUpdated', updateCartCount)
-    }
-  }, [])
-
+  const { getItemCount } = useCart()
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <nav className="bg-white shadow-lg border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-            <Logo variant="text" />
-            <span className="text-xs text-gray-500 ml-1 leading-tight">Innovation</span>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <nav className="bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 shadow-lg p-4 sticky top-0 z-50">
+        <div className="container mx-auto flex justify-between items-center">
+          <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
+            <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-lg">AR</span>
+            </div>
+            <span className="text-white font-bold text-2xl hover:text-pink-300 transition-colors">Fashion</span>
           </Link>
           <div className="flex items-center space-x-6">
-            <Link to="/tryon" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">Try-On</Link>
-            <Link to="/admin" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">Admin</Link>
-            <Link to="/cart" className="text-gray-700 hover:text-indigo-600 transition-colors flex items-center relative">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13v8a2 2 0 002 2h10a2 2 0 002-2v-3" />
+            <div className="relative">
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                className="px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200" 
+              />
+              <svg className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {cartCount}
+            </div>
+            <Link to="/tryon" className="text-white hover:text-pink-300 transition-colors font-medium">Try-On</Link>
+            <Link to="/contact" className="text-white hover:text-pink-300 transition-colors font-medium">Contact</Link>
+            <Link to="/admin" className="text-white hover:text-pink-300 transition-colors font-medium">Admin</Link>
+            <Link to="/cart" className="text-white text-2xl hover:text-pink-300 transition-colors relative">
+              🛒
+              {getItemCount() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
+                  {getItemCount()}
                 </span>
               )}
             </Link>
           </div>
         </div>
       </nav>
-      <main className="container mx-auto px-4 py-6">
+      <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductPage />} />
@@ -60,9 +54,9 @@ export default function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/tryon" element={<TryOn />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>
-      <Footer />
     </div>
   )
 }
