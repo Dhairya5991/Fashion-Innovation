@@ -12,9 +12,10 @@ export default function Home() {
     axios.get(import.meta.env.VITE_API_URL + '/products').then(r => setProducts(r.data)).catch(console.warn)
   }, [])
 
-  const menProducts = products.filter(p => p.categories.includes('Men')).slice(0, 4)
-  const womenProducts = products.filter(p => p.categories.includes('Women')).slice(0, 4)
-  const kidsProducts = products.filter(p => p.categories.includes('Kids')).slice(0, 4)
+  const menProducts = products && Array.isArray(products) ? products.filter(p => p.categories && p.categories.includes('Men')).slice(0, 4) : []
+  const womenProducts = products && Array.isArray(products) ? products.filter(p => p.categories && p.categories.includes('Women')).slice(0, 4) : []
+  const kidsProducts = products && Array.isArray(products) ? products.filter(p => p.categories && p.categories.includes('Kids')).slice(0, 4) : []
+  const bestSaleProducts = products && Array.isArray(products) ? products.filter(p => p.priceINR > 2000).slice(0, 4) : []
 
   const testimonials = [
     {
@@ -49,8 +50,6 @@ export default function Home() {
     }, 5000)
     return () => clearInterval(interval)
   }, [testimonials.length])
-
-  const bestSaleProducts = products.filter(p => p.priceINR < 2000).slice(0, 4)
 
   return (
     <div className="min-h-screen bg-gray-900">
