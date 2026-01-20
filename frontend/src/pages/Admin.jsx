@@ -107,14 +107,21 @@ export default function Admin() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Existing Products ({products.length})</h2>
+          <h2 className="text-2xl font-semibold mb-4">Existing Products ({Array.isArray(products) ? products.length : 0})</h2>
           <div className="space-y-2 max-h-96 overflow-y-auto">
-            {products.map(p => (
-              <div key={p._id} className="bg-white p-4 rounded shadow">
-                <h3 className="font-semibold">{p.title}</h3>
-                <p>₹{p.priceINR} - Stock: {p.inventory}</p>
+            {Array.isArray(products) && products.length > 0 ? (
+              products.map(p => (
+                <div key={p._id} className="bg-white p-4 rounded shadow">
+                  <h3 className="font-semibold">{p.title}</h3>
+                  <p>₹{p.priceINR} - Stock: {p.inventory}</p>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                Loading products...
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
