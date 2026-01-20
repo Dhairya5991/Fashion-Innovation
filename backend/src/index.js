@@ -12,6 +12,7 @@ const paymentsRoutes = require('./routes/payments')
 
 async function main() {
   await mongoose.connect(config.mongoUri)
+
   const app = express()
   app.use(cors())
   app.use(bodyParser.json({ limit: '5mb' }))
@@ -22,9 +23,34 @@ async function main() {
   app.use('/api/payments', paymentsRoutes)
   app.use('/api/admin', adminRoutes)
 
-  app.get('/health', (req, res) => res.json({ ok: true }))
+  // health checks
+  app.get('/health/live', (req, res) =>
+    res.status(200).json({ status: 'alive' })
+  )
 
-  app.listen(config.port, () => console.log('Server started on', config.port))
+  app.get('/health/ready', (req, res) => {
+    const ready = mongoose.connection.readyState === 1
+    res.status(ready ? 200 : 503).json({
+      status: ready ? 'ready' : 'not-ready',
+      mongo: ready ? 'connected' : 'not-connected'
+    })
+  })
+
+  app.get('/health', (req, res) => {
+    const mongoState = mongoose.connection.readyState
+    const isHealthy = mongoState === 1
+
+    res.status(isHealthy ? 200 : 503).json({
+      status: isHealthy ? 'UP' : 'DOWN',
+      service: 'backend',
+      mongo: isHealthy ? 'connected' : 'disconnected',
+      timestamp: new Date().toISOString()
+    })
+  })
+
+  app.listen(config.port, () =>
+    console.log('Server started on', config.port)
+  )
 }
 
 main().catch((e) => {

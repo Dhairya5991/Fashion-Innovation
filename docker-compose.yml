@@ -1,39 +1,60 @@
 services:
+  mongo:
+    image: mongo:4.4
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: fashion
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build: ./backend
     ports:
-      - '5000:5000'
+      - "5000:5000"
     env_file: .env
+    environment:
+      MONGO_URI: mongodb://mongo:27017/fashion
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     volumes:
       - ./backend:/app
+    command: npm run start
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:5000/health', res => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build: ./frontend
     ports:
-      - '3000:3000'
-    env_file: .env
+      - "5173:5173"
     depends_on:
-      - backend
-    volumes:
-      - ./frontend:/app
-
-  mongo:
-    image: mongo:6
-    restart: always
-    environment:
-      MONGO_INITDB_DATABASE: ar_fashion
-    volumes:
-      - mongo-data:/data/db
+      backend:
+        condition: service_healthy
+    command: npm run dev -- --host
 
   nginx:
     build: ./nginx
     ports:
-      - '80:80'
+      - "80:80"
     depends_on:
-      - frontend
-      - backend
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
 
 volumes:
   mongo-data:
