@@ -17,6 +17,12 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.1",
     "three": "^0.161.0"
+    "three": "^0.161.0",
+    "aframe": "^1.4.1",
+    "@mediapipe/pose": "^0.5.1675469404",
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@tensorflow/tfjs": "^4.8.0",
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.0",
