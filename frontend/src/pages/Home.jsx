@@ -160,7 +160,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {menProducts.map(p => (
+            {menProducts.length > 0 ? menProducts.map(p => (
               <div key={p._id} className="bg-gradient-to-br from-gray-800 to-gray-700 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-600">
                 <div className="relative">
                   <img src={p.images?.[0] || 'https://via.placeholder.com/300'} alt={p.title} className="h-56 w-full object-cover rounded-xl mb-6" />
@@ -180,7 +180,13 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="col-span-full text-center py-12">
+                <div className="text-6xl mb-4">👔</div>
+                <h3 className="text-2xl font-bold text-white mb-4">Men's Collection Coming Soon</h3>
+                <p className="text-gray-400">We're curating the best men's fashion for you. Check back soon!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -188,11 +194,23 @@ export default function Home() {
       {/* Women's Collection */}
       <section className="py-20 bg-gray-800">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-white">Women's Collection</h2>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-4xl font-bold text-white">Women's Collection</h2>
+            <Link to="/products?category=Women" className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105">
+              View All Women's →
+            </Link>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {womenProducts.map(p => (
+            {womenProducts.length > 0 ? womenProducts.map(p => (
               <div key={p._id} className="bg-gradient-to-br from-gray-700 to-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-600">
-                <img src={p.images?.[0] || 'https://via.placeholder.com/300'} alt={p.title} className="h-56 w-full object-cover rounded-xl mb-6" />
+                <div className="relative">
+                  <img src={p.images?.[0] || 'https://via.placeholder.com/300'} alt={p.title} className="h-56 w-full object-cover rounded-xl mb-6" />
+                  {p.priceINR > 2500 && (
+                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                      Premium
+                    </div>
+                  )}
+                </div>
                 <h3 className="text-xl font-semibold text-white mb-3">{p.title}</h3>
                 <p className="text-gray-400 text-sm mb-4 line-clamp-2">{p.description}</p>
                 <div className="flex justify-between items-center">
@@ -203,7 +221,13 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="col-span-full text-center py-12">
+                <div className="text-6xl mb-4">👗</div>
+                <h3 className="text-2xl font-bold text-white mb-4">Women's Collection Coming Soon</h3>
+                <p className="text-gray-400">We're curating the best women's fashion for you. Check back soon!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -211,11 +235,23 @@ export default function Home() {
       {/* Kids' Collection */}
       <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-white">Kids' Collection</h2>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-4xl font-bold text-white">Kids' Collection</h2>
+            <Link to="/products?category=Kids" className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105">
+              View All Kids' →
+            </Link>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {kidsProducts.map(p => (
+            {kidsProducts.length > 0 ? kidsProducts.map(p => (
               <div key={p._id} className="bg-gradient-to-br from-gray-800 to-gray-700 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-600">
-                <img src={p.images?.[0] || 'https://via.placeholder.com/300'} alt={p.title} className="h-56 w-full object-cover rounded-xl mb-6" />
+                <div className="relative">
+                  <img src={p.images?.[0] || 'https://via.placeholder.com/300'} alt={p.title} className="h-56 w-full object-cover rounded-xl mb-6" />
+                  {p.priceINR < 1500 && (
+                    <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                      Budget
+                    </div>
+                  )}
+                </div>
                 <h3 className="text-xl font-semibold text-white mb-3">{p.title}</h3>
                 <p className="text-gray-400 text-sm mb-4 line-clamp-2">{p.description}</p>
                 <div className="flex justify-between items-center">
@@ -226,7 +262,13 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="col-span-full text-center py-12">
+                <div className="text-6xl mb-4">🧒</div>
+                <h3 className="text-2xl font-bold text-white mb-4">Kids' Collection Coming Soon</h3>
+                <p className="text-gray-400">We're curating the best kids' fashion for you. Check back soon!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
