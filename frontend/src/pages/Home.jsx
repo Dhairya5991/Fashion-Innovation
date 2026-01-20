@@ -12,7 +12,7 @@ export default function Home() {
     <div>
       <h1 className="text-2xl font-bold mb-4">Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {products.map(p => (
+        {Array.isArray(products) && products.map(p => (
           <div key={p._id} className="bg-white p-4 rounded shadow">
             <img src={p.images?.[0] || 'https://via.placeholder.com/300'} alt="" className="h-48 w-full object-cover rounded" />
             <h3 className="mt-2 font-semibold">{p.title}</h3>
