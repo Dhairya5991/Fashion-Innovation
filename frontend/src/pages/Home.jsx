@@ -153,11 +153,23 @@ export default function Home() {
       {/* Men's Collection */}
       <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-white">Men's Collection</h2>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-4xl font-bold text-white">Men's Collection</h2>
+            <Link to="/products?category=Men" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105">
+              View All Men's →
+            </Link>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {menProducts.map(p => (
               <div key={p._id} className="bg-gradient-to-br from-gray-800 to-gray-700 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-600">
-                <img src={p.images?.[0] || 'https://via.placeholder.com/300'} alt={p.title} className="h-56 w-full object-cover rounded-xl mb-6" />
+                <div className="relative">
+                  <img src={p.images?.[0] || 'https://via.placeholder.com/300'} alt={p.title} className="h-56 w-full object-cover rounded-xl mb-6" />
+                  {p.priceINR > 3000 && (
+                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                      Premium
+                    </div>
+                  )}
+                </div>
                 <h3 className="text-xl font-semibold text-white mb-3">{p.title}</h3>
                 <p className="text-gray-400 text-sm mb-4 line-clamp-2">{p.description}</p>
                 <div className="flex justify-between items-center">

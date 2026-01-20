@@ -2,6 +2,7 @@ import React from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import Home from './pages/Home'
 import ProductPage from './pages/Product'
+import Products from './pages/Products'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import TryOn from './pages/TryOn'
@@ -33,6 +34,7 @@ export default function App() {
               </svg>
             </div>
             <Link to="/tryon" className="text-white hover:text-pink-300 transition-colors font-medium">Try-On</Link>
+            <Link to="/products" className="text-white hover:text-pink-300 transition-colors font-medium">Products</Link>
             <Link to="/contact" className="text-white hover:text-pink-300 transition-colors font-medium">Contact</Link>
             <Link to="/admin" className="text-white hover:text-pink-300 transition-colors font-medium">Admin</Link>
             <Link to="/cart" className="text-white text-2xl hover:text-pink-300 transition-colors relative">
@@ -49,6 +51,7 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />

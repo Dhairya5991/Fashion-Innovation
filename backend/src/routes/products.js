@@ -92,6 +92,105 @@ const mockProducts = [
     sizes: ['M', 'L', 'XL'],
     colors: ['Grey'],
     inStock: true
+  },
+  {
+    _id: '9',
+    title: 'Fashion Sunglasses',
+    description: 'Stylish sunglasses for sun protection and fashion',
+    priceINR: 2499,
+    images: ['https://via.placeholder.com/300x400/000000/ffffff?text=Sunglasses'],
+    categories: ['Accessories'],
+    sizes: ['One Size'],
+    colors: ['Black', 'Brown'],
+    inStock: true
+  },
+  {
+    _id: '10',
+    title: 'Leather Handbag',
+    description: 'Elegant leather handbag for everyday use',
+    priceINR: 4599,
+    images: ['https://via.placeholder.com/300x400/8b4513/ffffff?text=Leather+Handbag'],
+    categories: ['Accessories'],
+    sizes: ['Medium'],
+    colors: ['Brown', 'Black'],
+    inStock: true
+  },
+  {
+    _id: '11',
+    title: 'Kids Sneakers',
+    description: 'Comfortable and durable sneakers for active kids',
+    priceINR: 1799,
+    images: ['https://via.placeholder.com/300x400/ff6347/ffffff?text=Kids+Sneakers'],
+    categories: ['Kids'],
+    sizes: ['24', '25', '26', '27'],
+    colors: ['Red', 'Blue'],
+    inStock: true
+  },
+  {
+    _id: '13',
+    title: 'Men\'s Casual Polo Shirt',
+    description: 'Comfortable cotton polo shirt for everyday wear',
+    priceINR: 1899,
+    images: ['https://via.placeholder.com/300x400/32cd32/ffffff?text=Polo+Shirt'],
+    categories: ['Men'],
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Green', 'Blue', 'White'],
+    inStock: true
+  },
+  {
+    _id: '14',
+    title: 'Men\'s Formal Shirt',
+    description: 'Elegant formal shirt for office and occasions',
+    priceINR: 2499,
+    images: ['https://via.placeholder.com/300x400/f0f8ff/000000?text=Formal+Shirt'],
+    categories: ['Men'],
+    sizes: ['M', 'L', 'XL'],
+    colors: ['White', 'Light Blue'],
+    inStock: true
+  },
+  {
+    _id: '15',
+    title: 'Women\'s Blouse',
+    description: 'Stylish blouse perfect for work and casual outings',
+    priceINR: 1699,
+    images: ['https://via.placeholder.com/300x400/daa520/ffffff?text=Blouse'],
+    categories: ['Women'],
+    sizes: ['S', 'M', 'L'],
+    colors: ['Gold', 'White', 'Black'],
+    inStock: true
+  },
+  {
+    _id: '16',
+    title: 'Women\'s Skirt',
+    description: 'Elegant skirt for a sophisticated look',
+    priceINR: 2199,
+    images: ['https://via.placeholder.com/300x400/9932cc/ffffff?text=Skirt'],
+    categories: ['Women'],
+    sizes: ['S', 'M', 'L'],
+    colors: ['Purple', 'Black'],
+    inStock: true
+  },
+  {
+    _id: '17',
+    title: 'Kids\' Pajama Set',
+    description: 'Comfortable pajama set for cozy nights',
+    priceINR: 1299,
+    images: ['https://via.placeholder.com/300x400/ffb6c1/000000?text=Kids+Pajamas'],
+    categories: ['Kids'],
+    sizes: ['S', 'M'],
+    colors: ['Pink', 'Blue'],
+    inStock: true
+  },
+  {
+    _id: '18',
+    title: 'Kids\' School Uniform',
+    description: 'Durable and comfortable school uniform',
+    priceINR: 1999,
+    images: ['https://via.placeholder.com/300x400/ffffff/000000?text=School+Uniform'],
+    categories: ['Kids'],
+    sizes: ['S', 'M', 'L'],
+    colors: ['Navy Blue', 'Grey'],
+    inStock: true
   }
 ]
 
@@ -120,8 +219,34 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-  const p = await Product.findById(req.params.id)
-  res.json(p)
+  try {
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState === 1) {
+      const p = await Product.findById(req.params.id)
+      if (p) {
+        res.json(p)
+      } else {
+        res.status(404).json({ error: 'Product not found' })
+      }
+    } else {
+      // Return mock data if MongoDB is not connected
+      console.log('MongoDB not connected, returning mock product data')
+      const product = mockProducts.find(p => p._id === req.params.id)
+      if (product) {
+        res.json(product)
+      } else {
+        res.status(404).json({ error: 'Product not found' })
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching product:', error)
+    const product = mockProducts.find(p => p._id === req.params.id)
+    if (product) {
+      res.json(product)
+    } else {
+      res.status(404).json({ error: 'Product not found' })
+    }
+  }
 })
 
 module.exports = router
