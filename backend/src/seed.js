@@ -9,8 +9,9 @@ const dummyProducts = [
     priceINR: 2999,
     images: ["https://example.com/red-dress.jpg"],
     inventory: 20,
-    categories: ["Dresses", "Evening Wear"],
+    categories: ["Dresses", "Women", "Evening Wear"],
     sku: "RD001",
+    sizes: ["S", "M", "L", "XL", "XXL"],
     arModels: [{ url: "https://example.com/red-dress.glb", format: "glb" }],
     ecoTag: "Sustainable"
   },
@@ -20,8 +21,9 @@ const dummyProducts = [
     priceINR: 1999,
     images: ["https://example.com/blue-jeans.jpg"],
     inventory: 50,
-    categories: ["Pants", "Casual"],
+    categories: ["Pants", "Men", "Casual"],
     sku: "BJ002",
+    sizes: ["S", "M", "L", "XL", "XXL"],
     arModels: [{ url: "https://example.com/blue-jeans.glb", format: "glb" }],
     ecoTag: "Organic Cotton"
   },
@@ -31,8 +33,9 @@ const dummyProducts = [
     priceINR: 3499,
     images: ["https://example.com/white-sneakers.jpg"],
     inventory: 30,
-    categories: ["Shoes", "Casual"],
+    categories: ["Shoes", "Men", "Casual"],
     sku: "WS003",
+    sizes: ["S", "M", "L", "XL", "XXL"],
     arModels: [{ url: "https://example.com/white-sneakers.glb", format: "glb" }],
     ecoTag: "Recycled Materials"
   },
@@ -42,8 +45,9 @@ const dummyProducts = [
     priceINR: 4999,
     images: ["https://example.com/black-jacket.jpg"],
     inventory: 15,
-    categories: ["Jackets", "Outerwear"],
+    categories: ["Jackets", "Men", "Outerwear"],
     sku: "BJ004",
+    sizes: ["S", "M", "L", "XL", "XXL"],
     arModels: [{ url: "https://example.com/black-jacket.glb", format: "glb" }],
     ecoTag: "Vegan Leather"
   },
@@ -53,8 +57,9 @@ const dummyProducts = [
     priceINR: 1499,
     images: ["https://example.com/floral-skirt.jpg"],
     inventory: 25,
-    categories: ["Skirts", "Summer"],
+    categories: ["Skirts", "Women", "Summer"],
     sku: "FS005",
+    sizes: ["S", "M", "L", "XL", "XXL"],
     arModels: [{ url: "https://example.com/floral-skirt.glb", format: "glb" }],
     ecoTag: "Eco-Friendly Dye"
   }

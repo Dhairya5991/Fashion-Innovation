@@ -8,6 +8,7 @@ const ProductSchema = new mongoose.Schema({
   inventory: { type: Number, default: 10 },
   categories: [String],
   sku: String,
+  sizes: [String], // Added sizes field
   arModels: [{ url: String, format: String }],
   ecoTag: { type: String },
   createdAt: { type: Date, default: Date.now }
