@@ -44,7 +44,9 @@ export default function ARMirror({ modelUrl }){
     loader = new GLTFLoader()
     if (modelUrl) {
       loader.load(modelUrl, (gltf) => {
-        scene.remove(placeholder)
+        if (placeholder && scene.children.includes(placeholder)) {
+          scene.remove(placeholder)
+        }
         model = gltf.scene
         model.traverse((c)=>{ if (c.isMesh) c.castShadow = false })
         scene.add(model)
@@ -123,9 +125,14 @@ export default function ARMirror({ modelUrl }){
       }
       if (renderer) {
         renderer.dispose()
-      }
-      if (containerRef.current && renderer && renderer.domElement && containerRef.current.contains(renderer.domElement)) {
-        containerRef.current.removeChild(renderer.domElement)
+        // Safely remove renderer DOM element
+        if (renderer.domElement && renderer.domElement.parentNode) {
+          try {
+            renderer.domElement.parentNode.removeChild(renderer.domElement)
+          } catch (e) {
+            // Element might already be removed, ignore
+          }
+        }
       }
     }
   }, [modelUrl])
