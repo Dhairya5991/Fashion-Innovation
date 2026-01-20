@@ -1,7 +1,0 @@
-Flask==2.3.4
-numpy==1.26.4
-# For 3D data processing, these are placeholders.
-# open3d # For 3D data processing, if needed
-# trimesh # For mesh manipulation
-# pyglet # For OpenGL context (if doing raw OpenGL)
-# pyrender # For rendering 3D scenes (if generating images/videos)

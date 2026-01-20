@@ -1,106 +1,39 @@
-version: '3.8'
-
 services:
-  db:
-    image: postgres:13-alpine
-    restart: always
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432" # Expose DB port to host for local access/tools
-    networks:
-      - app_network
-
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    environment:
-      DB_HOST: db
-      DB_PORT: ${DB_PORT}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      JWT_SECRET: ${JWT_SECRET}
-      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
-      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
-      AI_BODY_SCAN_SERVICE_URL: ${AI_BODY_SCAN_SERVICE_URL}
-      AI_AVATAR_GEN_SERVICE_URL: ${AI_AVATAR_GEN_SERVICE_URL}
-      AI_GARMENT_MAP_SERVICE_URL: ${AI_GARMENT_MAP_SERVICE_URL}
-      FRONTEND_APP_URL: ${FRONTEND_APP_URL}
-      PORT: ${PORT}
+    build: ./backend
     ports:
-      - "3000:3000"
+      - '5000:5000'
+    env_file: .env
     depends_on:
-      - db
-      - ai_body_scanner
-      - ai_avatar_generator
-      - ai_garment_mapper
-    networks:
-      - app_network
+      - mongo
     volumes:
-      - ./backend:/app/backend # Mount backend code for development, remove for production build
-      - /app/backend/node_modules # Keep node_modules inside container
+      - ./backend:/app
 
-  ai_body_scanner:
-    build:
-      context: ./ai_services/body_scanner
-      dockerfile: Dockerfile
-    restart: always
+  frontend:
+    build: ./frontend
     ports:
-      - "5001:5001"
-    networks:
-      - app_network
+      - '3000:3000'
+    env_file: .env
+    depends_on:
+      - backend
     volumes:
-      - ./ai_services/body_scanner:/app # Mount code for development
-      - /app/venv # Keep virtual environment inside container
-    environment:
-      FLASK_APP: main.py
-      FLASK_RUN_HOST: 0.0.0.0
-      FLASK_RUN_PORT: 5001
+      - ./frontend:/app
 
-  ai_avatar_generator:
-    build:
-      context: ./ai_services/avatar_generator
-      dockerfile: Dockerfile
+  mongo:
+    image: mongo:6
     restart: always
-    ports:
-      - "5002:5002"
-    networks:
-      - app_network
-    volumes:
-      - ./ai_services/avatar_generator:/app # Mount code for development
-      - /app/venv # Keep virtual environment inside container
     environment:
-      FLASK_APP: main.py
-      FLASK_RUN_HOST: 0.0.0.0
-      FLASK_RUN_PORT: 5002
+      MONGO_INITDB_DATABASE: ar_fashion
+    volumes:
+      - mongo-data:/data/db
 
-  ai_garment_mapper:
-    build:
-      context: ./ai_services/garment_mapper
-      dockerfile: Dockerfile
-    restart: always
+  nginx:
+    build: ./nginx
     ports:
-      - "5003:5003"
-    networks:
-      - app_network
-    volumes:
-      - ./ai_services/garment_mapper:/app # Mount code for development
-      - /app/venv # Keep virtual environment inside container
-    environment:
-      FLASK_APP: main.py
-      FLASK_RUN_HOST: 0.0.0.0
-      FLASK_RUN_PORT: 5003
+      - '80:80'
+    depends_on:
+      - frontend
+      - backend
 
 volumes:
-  postgres_data:
-
-networks:
-  app_network:
-    driver: bridge
+  mongo-data:

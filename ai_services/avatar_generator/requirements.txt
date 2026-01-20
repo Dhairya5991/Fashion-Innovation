@@ -1,7 +1,0 @@
-Flask==2.3.4
-numpy==1.26.4
-# For 3D generation, these are placeholders. Actual libraries depend on the chosen engine.
-# For a simple mock, these might not be strictly necessary, but good to list for context.
-# open3d # For 3D data processing, if needed
-# trimesh # For mesh manipulation
-# pyglet # For OpenGL context (if doing raw OpenGL)
